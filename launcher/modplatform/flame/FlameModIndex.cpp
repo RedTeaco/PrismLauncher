@@ -138,6 +138,13 @@ auto FlameMod::loadIndexedPackVersion(QJsonObject& obj, bool load_changelog) -> 
     file.fileName = Json::requireString(obj, "fileName");
     file.fileName = FS::RemoveInvalidPathChars(file.fileName);
 
+    //添加拼接url
+    if (file.downloadUrl.isEmpty() && !file.fileName.isEmpty()) {
+        file.downloadUrl = QString("https://edge.forgecdn.net/files/%1/%2/%3")
+            .arg(file.fileId.toInt()/1000)
+            .arg(file.fileId.toInt() % 1000)
+            .arg(file.fileName);
+    }
     ModPlatform::IndexedVersionType::VersionType ver_type;
     switch (Json::requireInteger(obj, "releaseType")) {
         case 1:
